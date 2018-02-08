@@ -89,19 +89,48 @@ contract('WeightedAssetRegistryTest', accounts => {
     EIP820 = await getEIP820(creator)
     await registry.generate(0, creator, CONTENT_DATA, sentByCreator)
     await registry.generate(1, creator, CONTENT_DATA, sentByCreator)
+    await registry.changeWeight(0, 100, sentByCreator)
+    await registry.changeWeight(1, 250, sentByCreator)
   })
 
   describe('Global Setters', () => {
-    describe('weighted', () => {
-      it('has a total weight', async () => {
-        const totalWeight = await registry.totalWeight()
-        totalWeight.should.be.bignumber.equal(0)
-      })
+    describe('Weight', () => {
       it('is weighted', async () => {
         const isWeighted = await registry.isWeighted()
+
         isWeighted.should.be.equal(true)
       })
-    })
+      it('has a total weight equal to the created weight', async () => {
+        const totalWeight = await registry.totalWeight()
 
+        totalWeight.should.be.bignumber.equal(350)
+      })
+      it('has asset weight equal to the creation weight', async () => {
+        const assetWeight0 = await registry.weightOfAsset(0)
+        const assetWeight1 = await registry.weightOfAsset(1)
+
+        assetWeight0.should.be.bignumber.equal(100);
+        assetWeight1.should.be.bignumber.equal(250);
+      })
+      it('has a holder weight equal to their holdings', async () => {
+        const holderWeight = await registry.weightOfHolder(creator)
+
+        holderWeight.should.be.bignumber.equal(350)
+      })
+    })
+  })
+
+  describe('Transfer Accounting', () => {
+    it('Transfers an asset', async () => {
+      await registry.transfer(mallory, 1, sentByCreator)
+
+      const creatorWeight = await registry.weightOfHolder(creator)
+      const malloryWeight = await registry.weightOfHolder(mallory)
+      const totalWeight = await registry.totalWeight();
+
+      creatorWeight.should.be.bignumber.equal(100)
+      malloryWeight.should.be.bignumber.equal(250)
+      totalWeight.should.be.bignumber.equal(350)
+    })
   })
 })

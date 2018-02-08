@@ -12,9 +12,9 @@ interface IWeightedRegistry {
   /**
    * Holder-centric getter functions
    */
-  function weightOfAsset(uint256 assetId) public view returns (uint256);
+  function weightOfAsset(uint256 assetId) public view returns (uint64);
 
-  function weightOfHolder(address holder) external view returns (uint256[]);
+  function weightOfHolder(address holder) public view returns (uint256);
 
   /**
    * Transfer Operations
@@ -24,10 +24,15 @@ interface IWeightedRegistry {
   /**
    * Events
    */
-  event ChangeWeight(
+  event TransferWeight(
     address indexed from,
     address indexed to,
     uint256 indexed assetId,
     uint64 weight
   );
+  event ChangeWeight(
+    uint256 indexed assetId,
+    uint64 weight
+  );
+
 }
