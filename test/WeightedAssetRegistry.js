@@ -93,44 +93,53 @@ contract('WeightedAssetRegistryTest', accounts => {
     await registry.changeWeight(1, 250, sentByCreator)
   })
 
-  describe('Global Setters', () => {
-    describe('Weight', () => {
-      it('is weighted', async () => {
-        const isWeighted = await registry.isWeighted()
 
-        isWeighted.should.be.equal(true)
-      })
-      it('has a total weight equal to the created weight', async () => {
-        const totalWeight = await registry.totalWeight()
+  describe('Weight', () => {
+    it('is weighted', async () => {
+      const isWeighted = await registry.isWeighted()
 
-        totalWeight.should.be.bignumber.equal(350)
-      })
-      it('has asset weight equal to the creation weight', async () => {
-        const assetWeight0 = await registry.weightOfAsset(0)
-        const assetWeight1 = await registry.weightOfAsset(1)
+      isWeighted.should.be.equal(true)
+    })
+    it('has a total weight equal to the created weight', async () => {
+      const totalWeight = await registry.totalWeight()
 
-        assetWeight0.should.be.bignumber.equal(100);
-        assetWeight1.should.be.bignumber.equal(250);
-      })
-      it('has a holder weight equal to their holdings', async () => {
-        const holderWeight = await registry.weightOfHolder(creator)
+      totalWeight.should.be.bignumber.equal(350)
+    })
+    it('has asset weight equal to the creation weight', async () => {
+      const assetWeight0 = await registry.weightOfAsset(0)
+      const assetWeight1 = await registry.weightOfAsset(1)
 
-        holderWeight.should.be.bignumber.equal(350)
-      })
+      assetWeight0.should.be.bignumber.equal(100);
+      assetWeight1.should.be.bignumber.equal(250);
+    })
+    it('has a holder weight equal to their holdings', async () => {
+      const holderWeight = await registry.weightOfHolder(creator)
+
+      holderWeight.should.be.bignumber.equal(350)
     })
   })
 
-  describe('Transfer Accounting', () => {
+  describe('Accounting', () => {
     it('Transfers an asset', async () => {
       await registry.transfer(mallory, 1, sentByCreator)
 
       const creatorWeight = await registry.weightOfHolder(creator)
       const malloryWeight = await registry.weightOfHolder(mallory)
-      const totalWeight = await registry.totalWeight();
+      const totalWeight = await registry.totalWeight()
 
       creatorWeight.should.be.bignumber.equal(100)
       malloryWeight.should.be.bignumber.equal(250)
       totalWeight.should.be.bignumber.equal(350)
     })
+    it('Changes the weight of an asset', async () => {
+      await registry.changeWeight(0, 0, sentByCreator)
+
+      const assetWeight0 = await registry.weightOfAsset(0)
+      const totalWeight = await registry.totalWeight()
+
+      assetWeight0.should.be.bignumber.equal(0)
+      totalWeight.should.be.bignumber.equal(250)
+    })
   })
 })
+
