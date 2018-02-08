@@ -1,15 +1,15 @@
 pragma solidity ^0.4.18;
 
-import './StandardAssetRegistryTest.sol';
+import './WeightedAssetRegistryTest.sol';
 
 contract Exchange {
   // From asset to amount
   mapping(uint256 => uint256) internal _orders;
 
-  StandardAssetRegistryTest internal nonFungible;
+  WeightedAssetRegistryTest internal nonFungible;
 
   function Exchange (address _nonFungible) public {
-    nonFungible = StandardAssetRegistryTest(_nonFungible);
+    nonFungible = WeightedAssetRegistryTest(_nonFungible);
   }
 
   function sell(uint256 assetId, uint256 amount) public {

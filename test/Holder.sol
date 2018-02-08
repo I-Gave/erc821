@@ -2,7 +2,7 @@ pragma solidity ^0.4.18;
 
 import 'eip820/contracts/EIP820Implementer.sol';
 
-import '../contracts/IAssetHolder.sol';
+import '../contracts/DAR/IAssetHolder.sol';
 
 contract Holder is IAssetHolder, EIP820Implementer {
 

@@ -1,10 +1,10 @@
 pragma solidity ^0.4.18;
 
-import '../contracts/StandardAssetRegistry.sol';
+import '../contracts/WeightedAssetRegistry.sol';
 
-contract StandardAssetRegistryTest is StandardAssetRegistry {
+contract WeightedAssetRegistryTest is WeightedAssetRegistry {
 
-  function StandardAssetRegistryTest () public {
+  function WeightedAssetRegistryTest () public {
     _name = "Test";
     _symbol = "TEST";
     _description = "lorem ipsum";

@@ -4,7 +4,7 @@ import getEIP820 from './helpers/getEIP820'
 
 const BigNumber = web3.BigNumber
 
-const StandardAssetRegistry = artifacts.require('StandardAssetRegistryTest')
+const WeightedAssetRegistryTest = artifacts.require('WeightedAssetRegistryTest')
 const Holder = artifacts.require('Holder')
 const NonHolder = artifacts.require('NonHolder')
 
@@ -66,7 +66,7 @@ require('chai')
 
 const expect = require('chai').expect
 
-contract('StandardAssetRegistry', accounts => {
+contract('StandardAssetRegistryTest', accounts => {
   const [creator, user, anotherUser, operator, mallory] = accounts
   let registry = null
   let EIP820 = null
@@ -85,7 +85,7 @@ contract('StandardAssetRegistry', accounts => {
   const CONTENT_DATA = 'test data'
 
   beforeEach(async () => {
-    registry = await StandardAssetRegistry.new(creationParams)
+    registry = await WeightedAssetRegistryTest.new(creationParams)
     EIP820 = await getEIP820(creator)
     await registry.generate(0, creator, CONTENT_DATA, sentByCreator)
     await registry.generate(1, creator, CONTENT_DATA, sentByCreator)

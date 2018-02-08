@@ -2,7 +2,7 @@ import assertRevert from './helpers/assertRevert'
 
 const BigNumber = web3.BigNumber
 
-const StandardAssetRegistry = artifacts.require('StandardAssetRegistryTest')
+const WeightedAssetRegistryTest = artifacts.require('WeightedAssetRegistryTest')
 const Exchange =  artifacts.require('Exchange')
 
 const NONE = '0x0000000000000000000000000000000000000000'
@@ -29,7 +29,7 @@ contract('Exchange', accounts => {
   const CONTENT_DATA = 'test data'
 
   beforeEach(async () => {
-    registry = await StandardAssetRegistry.new(creationParams)
+    registry = await WeightedAssetRegistryTest.new(creationParams)
     exchange = await Exchange.new(registry.address)
     await registry.generate(0, creator, CONTENT_DATA, sentByCreator)
     await registry.generate(1, creator, CONTENT_DATA, sentByCreator)
@@ -52,7 +52,7 @@ contract('Exchange', accounts => {
       await exchange.buy(0, { ...sentByUser, value: web3.toWei(20, 'ether') })
       const currentBalance = web3.eth.getBalance(user);
       const diff = originalBalance.toNumber() - currentBalance.toNumber()
-      Math.round(web3.fromWei(diff, 'ether')).should.equal(10) // round down the gas      
+      Math.round(web3.fromWei(diff, 'ether')).should.equal(10) // round down the gas
     })
 
     it('reverts when buying without authorization', async () => {
@@ -67,7 +67,7 @@ contract('Exchange', accounts => {
     it('reverts when buying an asset not on sale', async () => {
       await assertRevert(exchange.buy(2))
     })
-    
+
     it('reverts when trying to buy with insufficient funds', async () => {
       await exchange.sell(0, 100, sentByCreator)
       await assertRevert(exchange.buy(0, { ...sentByUser, value: 50 }))
