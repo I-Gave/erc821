@@ -14,8 +14,8 @@ contract WeightedAssetRegistryTest is WeightedAssetRegistry {
     return _isContract(addr);
   }
 
-  function generate(uint256 assetId, address beneficiary, string data) public {
-    _generate(assetId, beneficiary, data);
+  function generate(uint256 assetId, address beneficiary, string data, uint64 weight) public {
+    _generate(assetId, beneficiary, data, weight);
   }
 
   function update(uint256 assetId, string data) public {

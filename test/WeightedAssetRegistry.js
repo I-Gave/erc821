@@ -87,10 +87,8 @@ contract('WeightedAssetRegistryTest', accounts => {
   beforeEach(async () => {
     registry = await WeightedAssetRegistryTest.new(creationParams)
     EIP820 = await getEIP820(creator)
-    await registry.generate(0, creator, CONTENT_DATA, sentByCreator)
-    await registry.generate(1, creator, CONTENT_DATA, sentByCreator)
-    await registry.changeWeight(0, 100, sentByCreator)
-    await registry.changeWeight(1, 250, sentByCreator)
+    await registry.generate(0, creator, CONTENT_DATA, 100, sentByCreator)
+    await registry.generate(1, creator, CONTENT_DATA, 250, sentByCreator)
   })
 
 
