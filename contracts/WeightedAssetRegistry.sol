@@ -30,7 +30,6 @@ contract WeightedAssetRegistry is StandardAssetRegistry, WeightedAssetRegistrySt
     _weightOfHolder[from] -= weight;
   }
 
-  // Todo protect against holder overflow
   function changeWeight(uint256 assetId, uint64 weight) public {
     require(exists(assetId));
 
@@ -39,6 +38,10 @@ contract WeightedAssetRegistry is StandardAssetRegistry, WeightedAssetRegistrySt
 
     if (owner != address(0)) {
       _removeWeightFrom(owner, oldWeight);
+      uint256 ownerWeight = weightOfHolder(owner);
+      // Protect against overflow
+      uint256 newOwnerWeight = ownerWeight + weight;
+      assert(newOwnerWeight >= ownerWeight);
       _addWeightTo(owner, weight);
     }
 
@@ -82,25 +85,12 @@ contract WeightedAssetRegistry is StandardAssetRegistry, WeightedAssetRegistrySt
   {
     address holder = _holderOf[assetId];
     uint64 weight = weightOfAsset(assetId);
-    _removeAssetFrom(holder, assetId);
+
     _removeWeightFrom(holder, weight);
-    _clearApproval(holder, assetId);
-    _addAssetTo(to, assetId);
     _addWeightTo(to, weight);
 
-    if (_isContract(to)) {
-      require(!_reentrancy);
-      _reentrancy = true;
+    super._doSend(to, assetId, userData, operator, operatorData);
 
-      address recipient = interfaceAddr(to, 'IAssetHolder');
-      require(recipient != 0);
-
-      IAssetHolder(recipient).onAssetReceived(assetId, holder, to, userData, operator, operatorData);
-
-      _reentrancy = false;
-    }
-
-    Transfer(holder, to, assetId, operator, userData, operatorData);
     TransferWeight(holder, to, assetId, weight);
   }
 
