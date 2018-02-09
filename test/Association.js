@@ -72,15 +72,34 @@ contract('DAO Test', accounts => {
         'Test Proposal',
         ''
       )
+      const beforeVote = await association.proposals(0);
 
       await association.vote(0, true)
 
-      const newProposal = await association.proposals(0);
+      const afterVote = await association.proposals(0);
 
-      newProposal[0].should.be.equal(creator);
-      newProposal[1].should.be.bignumber.equal(0);
-      newProposal[2].should.be.equal('Test Proposal');
+      beforeVote[6].should.be.bignumber.equal(0)
+      afterVote[6].should.be.bignumber.equal(1)
     })
+    it('Executes a proposal',  async () => {
+      await association.newProposal(
+        creator,
+        0,
+        'Test Proposal',
+        ''
+      )
+      const beforeVote = await association.proposals(0);
+
+      await association.vote(0, true)
+
+      const afterVote = await association.proposals(0);
+
+      const { logs } = await association.executeProposal(0, '');
+      const quorum = logs[0].args.quorum.toNumber();
+
+      quorum.should.be.equal(350)
+    })
+
   })
 
 })

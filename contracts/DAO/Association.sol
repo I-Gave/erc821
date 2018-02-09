@@ -1,7 +1,9 @@
 pragma solidity ^0.4.18;
 
 /*
- *  From ethereum.org/dao
+ * DO NOT USE - executeProposal deadline check removed for testing
+ * From ethereum.org/dao - Use full code there
+ *
  **/
 
 contract owned {
@@ -224,8 +226,7 @@ contract Association is owned, tokenRecipient {
     function executeProposal(uint proposalNumber, bytes transactionBytecode) {
         Proposal storage p = proposals[proposalNumber];
 
-        require(now > p.votingDeadline                                             // If it is past the voting deadline
-            && !p.executed                                                          // and it has not already been executed
+        require(!p.executed                                                         // and it has not already been executed
             && p.proposalHash == sha3(p.recipient, p.amount, transactionBytecode)); // and the supplied code matches the proposal...
 
 
