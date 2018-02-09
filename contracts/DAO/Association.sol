@@ -1,5 +1,9 @@
 pragma solidity ^0.4.18;
 
+/*
+ *  From ethereum.org/dao
+ **/
+
 contract owned {
     address public owner;
 
