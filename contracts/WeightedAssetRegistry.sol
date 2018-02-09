@@ -50,6 +50,21 @@ contract WeightedAssetRegistry is StandardAssetRegistry, WeightedAssetRegistrySt
     ChangeWeight(assetId, weight);
   }
 
+
+  function _destroy(uint256 assetId) internal {
+    address holder = _holderOf[assetId];
+    require(holder != 0);
+
+    uint64 weight = weightOfAsset(assetId);
+
+    _removeWeightFrom(holder, weight);
+    _weightOfAsset[assetId] = 0;
+    _weight -= weight;
+
+    super._destroy(assetId);
+    ChangeWeight(assetId, 0);
+  }
+
   function _doSend(
     address to, uint256 assetId, bytes userData, address operator, bytes operatorData
   )

@@ -120,6 +120,15 @@ contract('WeightedAssetRegistryTest', accounts => {
   })
 
   describe('Accounting', () => {
+    it('Changes the weight of an asset', async () => {
+      await registry.changeWeight(0, 0, sentByCreator)
+
+      const assetWeight0 = await registry.weightOfAsset(0)
+      const totalWeight = await registry.totalWeight()
+
+      assetWeight0.should.be.bignumber.equal(0)
+      totalWeight.should.be.bignumber.equal(250)
+    })
     it('Transfers an asset', async () => {
       await registry.transfer(mallory, 1, sentByCreator)
 
@@ -131,14 +140,13 @@ contract('WeightedAssetRegistryTest', accounts => {
       malloryWeight.should.be.bignumber.equal(250)
       totalWeight.should.be.bignumber.equal(350)
     })
-    it('Changes the weight of an asset', async () => {
-      await registry.changeWeight(0, 0, sentByCreator)
+    it('Destroys an asset - moo hoo whahaha', async () => {
+      const oldWeight = await registry.totalWeight();
+      const assetWeight = await registry.weightOfAsset(1);
+      await registry.destroy(1);
+      const newWeight = await registry.totalWeight();
 
-      const assetWeight0 = await registry.weightOfAsset(0)
-      const totalWeight = await registry.totalWeight()
-
-      assetWeight0.should.be.bignumber.equal(0)
-      totalWeight.should.be.bignumber.equal(250)
+      newWeight.should.be.bignumber.equal(oldWeight - assetWeight)
     })
   })
 })
