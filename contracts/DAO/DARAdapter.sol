@@ -4,7 +4,9 @@ pragma solidity ^0.4.18;
  * This contract is an interface between the DAO and the DAO.
  **/
 
-contract WeightedAssetRegistry {
+import './IDARAdapter.sol';
+
+contract WeightedAssetRegistry is IDARAdapter {
   mapping(address => uint256) internal _weightOfHolder;
   function weightOfHolder(address holder) public view returns (uint256);
 }
