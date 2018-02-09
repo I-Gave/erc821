@@ -138,13 +138,55 @@ contract('WeightedAssetRegistryTest', accounts => {
       malloryWeight.should.be.bignumber.equal(250)
       totalWeight.should.be.bignumber.equal(350)
     })
-    it('Destroys an asset - moo hoo whahaha', async () => {
+    it('Decreases an asset value', async () => {
+      const changeWeight = 150;
+      const oldTotalWeight = await registry.totalWeight();
+      const oldAssetWeight = await registry.weightOfAsset(1);
+
+      await registry.update(1, '', changeWeight);
+
+      const newTotalWeight = await registry.totalWeight();
+      const newAssetWeight = await registry.weightOfAsset(1);
+
+      const assetChange = oldAssetWeight - newAssetWeight
+
+      newAssetWeight.should.be.bignumber.equal(oldAssetWeight - assetChange)
+      newTotalWeight.should.be.bignumber.equal(oldTotalWeight - assetChange)
+    })
+    it('Increases an asset value', async () => {
+      const changeWeight = 350;
+      const oldTotalWeight = await registry.totalWeight();
+      const oldAssetWeight = await registry.weightOfAsset(1);
+
+      await registry.update(1, '', changeWeight);
+
+      const newTotalWeight = await registry.totalWeight();
+      const newAssetWeight = await registry.weightOfAsset(1);
+
+      const assetChange = oldAssetWeight - newAssetWeight
+
+      newAssetWeight.should.be.bignumber.equal(oldAssetWeight - assetChange)
+      newTotalWeight.should.be.bignumber.equal(oldTotalWeight - assetChange)
+    })
+    it('Destroys an asset', async () => {
       const oldWeight = await registry.totalWeight();
-      const assetWeight = await registry.weightOfAsset(1);
+      let assetWeight = await registry.weightOfAsset(1);
       await registry.destroy(1);
       const newWeight = await registry.totalWeight();
 
-      newWeight.should.be.bignumber.equal(oldWeight - assetWeight)
+      const correctWeight = oldWeight - assetWeight
+
+      newWeight.should.be.bignumber.equal(correctWeight)
+      assetWeight = await registry.weightOfAsset(1);
+      assetWeight.should.be.bignumber.equal(0)
+    })
+    it('Creates an asset', async () => {
+      const assetWeight = 1000;
+      const oldWeight = await registry.totalWeight();
+      await registry.generate(2, creator, CONTENT_DATA, assetWeight)
+      const newWeight = await registry.totalWeight();
+
+      newWeight.should.be.bignumber.equal(oldWeight.toNumber() + assetWeight)
     })
   })
 })

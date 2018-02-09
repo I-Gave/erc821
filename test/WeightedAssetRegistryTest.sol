@@ -18,8 +18,8 @@ contract WeightedAssetRegistryTest is WeightedAssetRegistry {
     _generate(assetId, beneficiary, data, weight);
   }
 
-  function update(uint256 assetId, string data) public {
-    _update(assetId, data);
+  function update(uint256 assetId, string data, uint64 weight) public {
+    _update(assetId, data, weight);
   }
 
   function destroy(uint256 assetId) public {

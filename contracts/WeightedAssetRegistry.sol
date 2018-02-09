@@ -50,6 +50,11 @@ contract WeightedAssetRegistry is StandardAssetRegistry, WeightedAssetRegistrySt
     ChangeWeight(assetId, weight);
   }
 
+  function _update(uint256 assetId, string data, uint64 weight) internal {
+    super._update(assetId, data);
+    changeWeight(assetId, weight);
+  }
+
   function _generate(uint256 assetId, address beneficiary, string data, uint64 weight) internal {
     super._generate(assetId, beneficiary, data);
 
