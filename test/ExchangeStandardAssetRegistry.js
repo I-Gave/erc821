@@ -2,7 +2,7 @@ import assertRevert from './helpers/assertRevert'
 
 const BigNumber = web3.BigNumber
 
-const WeightedAssetRegistryTest = artifacts.require('WeightedAssetRegistryTest')
+const WeightedAssetRegistryTest = artifacts.require('StandardAssetRegistryTest')
 const Exchange =  artifacts.require('Exchange')
 
 const NONE = '0x0000000000000000000000000000000000000000'

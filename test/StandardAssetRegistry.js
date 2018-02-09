@@ -4,7 +4,7 @@ import getEIP820 from './helpers/getEIP820'
 
 const BigNumber = web3.BigNumber
 
-const WeightedAssetRegistryTest = artifacts.require('WeightedAssetRegistryTest')
+const WeightedAssetRegistryTest = artifacts.require('StandardAssetRegistryTest')
 const Holder = artifacts.require('Holder')
 const NonHolder = artifacts.require('NonHolder')
 
